@@ -61,10 +61,10 @@ library(Mus.musculus)
 
 ## Reading in count-data
 
-To get started with this analysis, download the file *GSE63310_RAW.tar* available online from [http://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE63310&format=file](http://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE63310&format=file), and extract the relevant files from this archive. The code below will do this, or you can do this step manually and then move on.
+To get started with this analysis, download the file *GSE63310_RAW.tar* available online from [https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE63310&format=file](https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE63310&format=file), and extract the relevant files from this archive. The code below will do this, or you can do this step manually and then move on.
 
 ```{r downloadData}
-url <- "http://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE63310&format=file"
+url <- "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE63310&format=file"
 utils::download.file(url, destfile="GSE63310_RAW.tar", mode="wb") 
 utils::untar("GSE63310_RAW.tar", exdir = ".")
 files <- c("GSM1545535_10_6_5_11.txt", "GSM1545536_9_6_5_11.txt", "GSM1545538_purep53.txt",
