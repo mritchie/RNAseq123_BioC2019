@@ -1,6 +1,6 @@
 Package: RNAseq123
 Title: RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR
-Version: 1.0.0
+Version: 1.0.1
 Date: 2017-04-05
 Authors@R: c(person(role="aut", "Charity", "Law", email = "law@wehi.edu.au"), 
                       person(role="aut", "Monther", "Alhamdoosh", email = "monther.alhamdoosh@csl.com.au"),
