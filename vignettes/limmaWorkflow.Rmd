@@ -22,6 +22,11 @@ output:
     fig_caption: true
     self_contained: no
 ---
+**R version**: `r R.version.string`
+
+**Bioconductor version**: `r BiocInstaller::biocVersion()`
+
+**Package**: `r packageVersion("RNAseq123")`
 
 # Abstract
 
