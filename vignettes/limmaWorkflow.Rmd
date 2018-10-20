@@ -458,7 +458,7 @@ Other gene set tests are available in **limma**, such as the self-contained test
 # Software and code used
 
 This RNA-seq workflow makes use of various packages available from version 3.4 of the Bioconductor project, running on **R** version 3.3.0 or higher. Besides the software highlighted in this article (**limma**, **Glimma** and **edgeR**) it requires a number of other packages, including **gplots** and **RColorBrewer** and the gene annotation package **Mus.musculus**. 
-This document was compiled using **knitr**. Version numbers for all packages used are shown below. Code to perform this analysis is available in the Bioconductor workflow package **RNAseq123** from [http://www.bioconductor.org/help/workflows/RNAseq123/](http://www.bioconductor.org/help/workflows/RNAseq123/). A Mandarin version of this vignette is also available in the **RNAseq123** package.
+This document was compiled using **knitr**. Version numbers for all packages used are shown below. Code to perform this analysis is available in the Bioconductor workflow package **RNAseq123** from [http://www.bioconductor.org/help/workflows/RNAseq123/](http://www.bioconductor.org/help/workflows/RNAseq123/). A Chinese (Mandarin) translation of this article is also available in the **RNAseq123** package.
 
 ```{r softwareinfo}
 sessionInfo()
