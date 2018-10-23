@@ -246,13 +246,13 @@ In our analyses, CPM and log-CPM transformations are used regularly although the
 尽管CPM和log-CPM转换并不像RPKM和FPKM那样考虑到基因长度区别的影响，但在我们的分析中经常会用到它们。虽然也可以使用RPKM和FPKM，但CPM和log-CPM只使用计数矩阵即可计算，且已足以满足我们所感兴趣的比较的需要。假设不同条件之间剪接异构体（isoform）的使用没有差别，差异表达分析研究同一基因在不同条件下的表达差异，而不是比较多个基因之间的表达或测定绝对表达量。换而言之，基因长度在我们感兴趣的比较中始终不变，且任何观测到的差异是来自于条件的变化而不是基因长度的变化。
 
 <!--
-Here raw counts are converted to CPM and log-CPM values using the `cpm` function in **edgeR**, where log-transformations use a prior count of 0.25 to avoid taking the log of zero.  RPKM values are just as easily calculated as CPM values using the `rpkm` function in **edgeR** if gene lengths are available. 
+Here raw counts are converted to CPM and log-CPM values using the `cpm` function in **edgeR**, where the log-transformation uses a prior count of 2 to avoid taking the log of zero and reduce variability of low count genes. RPKM values are just as easily calculated as CPM values using the `rpkm` function in **edgeR** if gene lengths are available. 
 -->
-在此处，使用**edgeR**中的`cpm`函数将原始计数转换为CPM和log-CPM值。其中，在进行对数转换前会给所有基因的计数加上0.25，以避免对零取对数。如果可以提供基因长度信息，可以使用**edgeR**中的`rpkm`函数计算RPKM值，就像计算CPM值那样简单。
+在此处，使用**edgeR**中的`cpm`函数将原始计数转换为CPM和log-CPM值。其中，在进行对数转换前会给所有基因的计数加上2，以避免对零取对数。如果可以提供基因长度信息，可以使用**edgeR**中的`rpkm`函数计算RPKM值，就像计算CPM值那样简单。
 
 ```{r cpm}
 cpm <- cpm(x)
-lcpm <- cpm(x, log=TRUE)
+lcpm <- cpm(x, log=TRUE, prior.count=2)
 ```
 
 ## 删除低表达基因
@@ -303,7 +303,7 @@ for (i in 2:nsamples){
  lines(den$x, den$y, col=col[i], lwd=2)
 }
 legend("topright", samplenames, text.col=col, bty="n")
-lcpm <- cpm(x, log=TRUE)
+lcpm <- cpm(x, log=TRUE, prior.count=2)
 plot(density(lcpm[,1]), col=col[1], lwd=2, ylim=c(0,0.21), las=2, 
      main="", xlab="")
 title(main="B. Filtered data", xlab="Log-cpm")
@@ -355,12 +355,12 @@ The figure below shows the expression distribution of samples for unnormalised a
 
 ```{r plotmodifieddata, fig.height=4, fig.width=8, fig.cap="样例数据：log-CPM值的箱线图展示了未经归一化的数据（A）及归一化后的数据（B）中每个样本的表达分布。数据集经过调整，样本1和2中的表达计数分别被缩放到其原始值的5%和500%。"}
 par(mfrow=c(1,2))
-lcpm <- cpm(x2, log=TRUE)
+lcpm <- cpm(x2, log=TRUE, prior.count=2)
 boxplot(lcpm, las=2, col=col, main="")
 title(main="A. Example: Unnormalised data",ylab="Log-cpm")
 x2 <- calcNormFactors(x2)  
 x2$samples$norm.factors
-lcpm <- cpm(x2, log=TRUE)
+lcpm <- cpm(x2, log=TRUE, prior.count=2)
 boxplot(lcpm, las=2, col=col, main="")
 title(main="B. Example: Normalised data",ylab="Log-cpm")
 ```
@@ -397,7 +397,7 @@ Dimensions 3 and 4 are examined using the colour grouping defined by sequencing 
 维度3和4使用以测序泳道（批次）定义的色彩组合进行检查。
 
 ```{r MDS1, fig.height=4, fig.width=8, fig.cap="log-CPM值在维度1和2的MDS图，以样品分组上色并标记（A）和维度3和4的MDS图，以测序道上色并标记（B）。图中的距离对应于最主要的倍数变化（fold change），默认情况下也就是前500个在每对样品之间差异最大的基因的平均（均方根）log2倍数变化。"}
-lcpm <- cpm(x, log=TRUE)
+lcpm <- cpm(x, log=TRUE, prior.count=2)
 par(mfrow=c(1,2))
 col.group <- group
 levels(col.group) <-  brewer.pal(nlevels(col.group), "Set1")
@@ -592,7 +592,7 @@ The `glMDPlot` function is not limited to mean-difference plots, with a default 
 
 ```{r GlimmaMDplot}
 glMDPlot(tfit, coef=1, status=dt, main=colnames(tfit)[1],
-         side.main="ENTREZID", counts=x$counts, groups=group, launch=FALSE)
+         side.main="ENTREZID", counts=lcpm, groups=group, launch=FALSE)
 ```
 
 [交互式MD图链接](glimma-plots/MD-Plot.html)
@@ -625,7 +625,7 @@ library(gplots)
 basal.vs.lp.topgenes <- basal.vs.lp$ENTREZID[1:100]
 i <- which(v$genes$ENTREZID %in% basal.vs.lp.topgenes)
 mycol <- colorpanel(1000,"blue","white","red")
-heatmap.2(v$E[i,], scale="row",
+heatmap.2(lcpm[i,], scale="row",
    labRow=v$genes$SYMBOL[i], labCol=group, 
    col=mycol, trace="none", density.info="none", 
    margin=c(8,6), lhei=c(2,10), dendrogram="column")
