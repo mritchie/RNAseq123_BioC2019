@@ -248,7 +248,7 @@ In our analyses, CPM and log-CPM transformations are used regularly although the
 <!--
 Here raw counts are converted to CPM and log-CPM values using the `cpm` function in **edgeR**, where the log-transformation uses a prior count of 2 to avoid taking the log of zero and reduce variability of low count genes. RPKM values are just as easily calculated as CPM values using the `rpkm` function in **edgeR** if gene lengths are available. 
 -->
-在此处，使用**edgeR**中的`cpm`函数将原始计数转换为CPM和log-CPM值。其中，在进行对数转换前会给所有基因的计数加上2，以避免对零取对数。如果可以提供基因长度信息，可以使用**edgeR**中的`rpkm`函数计算RPKM值，就像计算CPM值那样简单。
+在此处，使用**edgeR**中的`cpm`函数将原始计数转换为CPM和log-CPM值。其中，在进行对数转换前会给所有基因的计数加上2，以避免对零取对数，且可减小低表达基因之间的差异。 如果可以提供基因长度信息，可以使用**edgeR**中的`rpkm`函数计算RPKM值，就像计算CPM值那样简单。
 
 ```{r cpm}
 cpm <- cpm(x)
