@@ -164,7 +164,7 @@ Here raw counts are converted to CPM and log-CPM values using the `cpm` function
 
 ```{r cpm}
 cpm <- cpm(x)
-lcpm <- cpm(x, log=TRUE, prior.count=2)
+lcpm <- cpm(x, log=TRUE)
 ```
 
 ## Removing genes that are lowly expressed
@@ -202,7 +202,7 @@ for (i in 2:nsamples){
  lines(den$x, den$y, col=col[i], lwd=2)
 }
 legend("topright", samplenames, text.col=col, bty="n")
-lcpm <- cpm(x, log=TRUE, prior.count=2)
+lcpm <- cpm(x, log=TRUE)
 plot(density(lcpm[,1]), col=col[1], lwd=2, ylim=c(0,0.21), las=2, 
      main="", xlab="")
 title(main="B. Filtered data", xlab="Log-cpm")
@@ -239,12 +239,12 @@ The figure below shows the expression distribution of samples for unnormalised a
 
 ```{r plotmodifieddata, fig.height=4, fig.width=8, fig.cap="Example data: Boxplots of log-CPM values showing expression distributions for unnormalised data (A) and normalised data (B) for each sample in the modified dataset where the counts in samples 1 and 2 have been scaled to 5% and 500% of their original values respectively."}
 par(mfrow=c(1,2))
-lcpm <- cpm(x2, log=TRUE, prior.count=2)
+lcpm <- cpm(x2, log=TRUE)
 boxplot(lcpm, las=2, col=col, main="")
 title(main="A. Example: Unnormalised data",ylab="Log-cpm")
 x2 <- calcNormFactors(x2)  
 x2$samples$norm.factors
-lcpm <- cpm(x2, log=TRUE, prior.count=2)
+lcpm <- cpm(x2, log=TRUE)
 boxplot(lcpm, las=2, col=col, main="")
 title(main="B. Example: Normalised data",ylab="Log-cpm")
 ```
@@ -264,7 +264,7 @@ To create the MDS plots, different colour groupings are assigned to factors of i
 Dimensions 3 and 4 are examined using the colour grouping defined by sequencing lanes (batch).
 
 ```{r MDS1, fig.height=4, fig.width=8, fig.cap="MDS plots of log-CPM values over dimensions 1 and 2 with samples coloured and labeled by sample groups (A) and over dimensions 3 and 4 with samples coloured and labeled by sequencing lane (B). Distances on the plot correspond to the leading fold-change, which is the average (root-mean-square) log2-fold-change for the 500 genes most divergent between each pair of samples by default."}
-lcpm <- cpm(x, log=TRUE, prior.count=2)
+lcpm <- cpm(x, log=TRUE)
 par(mfrow=c(1,2))
 col.group <- group
 levels(col.group) <-  brewer.pal(nlevels(col.group), "Set1")

@@ -15,7 +15,7 @@ author:
     affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; School of Mathematics and Statistics, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
   - name: Matthew E. Ritchie
     affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia; School of Mathematics and Statistics, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
-date: 23 October 2018
+date: 7 November 2018
 vignette: >
   %\VignetteIndexEntry{RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR (Chinese version)}
   %\VignetteEngine{knitr::rmarkdown}
@@ -25,6 +25,12 @@ output:
   BiocStyle::html_document:
     fig_caption: true
 ---
+**R version**: `r R.version.string`
+
+**Bioconductor version**: `r BiocManager::version()`
+
+**Package**: `r packageVersion("RNAseq123")`
+
 <!-- --- -->
 <!-- title: "使用limma、Glimma和edgeR，RNA-seq数据分析易如反掌" -->
 <!-- author:  -->
@@ -85,7 +91,7 @@ The experiment analysed in this workflow is from Sheridan *et al.* (2015) [@Sher
 <!--
 The analysis outlined in this article assumes that reads obtained from an RNA-seq experiment have been aligned to an appropriate reference genome and summarised into counts associated with gene-specific regions. In this instance, reads were aligned to the mouse reference genome (mm10) using the **R** based pipeline available in the **Rsubread** package (specifically the `align` function [@Liao:NAR:2013] followed by `featureCounts` [@Liao:Bioinformatics:2014] for gene-level summarisation based on the in-built *mm10* RefSeq-based annotation).  
 -->
-本文所描述的分析假设从RNA-seq实验获得的序列片段已经与适当的参考基因组比对，并已经在基因水平上对序列进行了统计计数。在本文条件下，使用**Rsubread**包提供的基于**R**的流程将序列片段与小鼠参考基因组（mm20）比对（具体而言，先使用`align`函数[@Liao:NAR:2013]，然后使用`featureCounts` [@Liao:Bioinformatics:2014]进行基因水平的总结，利用其内置的*mm10*基于RefSeq的注释），
+本文所描述的分析假设从RNA-seq实验获得的序列片段已经与适当的参考基因组比对，并已经在基因水平上对序列进行了统计计数。在本文条件下，使用**Rsubread**包提供的基于**R**的流程将序列片段与小鼠参考基因组（mm10）比对（具体而言，先使用`align`函数[@Liao:NAR:2013]，然后使用`featureCounts` [@Liao:Bioinformatics:2014]进行基因水平的总结，利用其内置的*mm10*基于RefSeq的注释），
 
 <!--
 Count data for these samples can be downloaded from the Gene Expression Omnibus (GEO) [http://www.ncbi.nlm.nih.gov/geo/](http://www.ncbi.nlm.nih.gov/geo/) using GEO Series accession number GSE63310. Further information on experimental design and sample preparation is also available from GEO under this accession number.
@@ -169,7 +175,7 @@ For downstream analysis, sample-level information related to the experimental de
 Our DGEList-object contains a `samples` data frame that stores both cell type (or `group`) and batch (sequencing `lane`) information, each of which consists of three distinct levels. Note that within `x$samples`, library sizes are automatically calculated for each sample and normalisation factors are set to 1.
 For simplicity, we remove the GEO sample IDs (GSM*) from the column names of our DGEList-object `x`.
 -->
-我们的DGEList对象中包含的`samples`数据框同时存储了细胞类型（`group`）和批次（测序泳道       `lane`）信息，每种信息都包含三个不同的水平。需要注意的是，在`x$samples`中，程序会自动计算每个样品的文库大小，归一化系数会被设置为1.
+我们的DGEList对象中包含的`samples`数据框同时存储了细胞类型（`group`）和批次（测序泳道`lane`）信息，每种信息都包含三个不同的水平。需要注意的是，在`x$samples`中，程序会自动计算每个样品的文库大小，归一化系数会被设置为1.
 为了简单起见，我们从我们的DGEList对象`x`的列名中删去了GEO样品ID（GSM*）。
 
 ```{r annotatesamples}
@@ -196,7 +202,7 @@ This information can be retrieved using organism specific packages such as **Mus
 <!--
 The type of information that can be retrieved includes gene symbols, gene names, chromosome names and locations, Entrez gene IDs, Refseq gene IDs and Ensembl gene IDs to name just a few. **biomaRt** primarily works off Ensembl gene IDs, whereas **Mus.musculus** packages information from various sources and allows users to choose between many different gene IDs as the key. 
 -->
-可以检索的信息类型包括基因符号（gene symbols）、基因名称（gene names）、染色体名称和位置（chromosome names and locations）、Entrez基因ID（Entrez gene IDs）、Refseq基因ID（Refseq gene IDs）和Ensembl基因ID（Ensembl gene IDs）等。**biomaRt** 主要使用Ensembl基因ID进行检索，而由于**Mus.musculus**包含多种不同来源的信息，它允许用户从多种不同基因ID中选取检索键。
+可以检索的信息类型包括基因符号（gene symbols）、基因名称（gene names）、染色体名称和位置（chromosome names and locations）、Entrez基因ID（Entrez gene IDs）、Refseq基因ID（Refseq gene IDs）和Ensembl基因ID（Ensembl gene IDs）等。**biomaRt**主要使用Ensembl基因ID进行检索，而由于**Mus.musculus**包含多种不同来源的信息，它允许用户从多种不同基因ID中选取检索键。
 
 <!--
 The Entrez gene IDs available in our dataset were annotated using the **Mus.musculus** package to retrieve associated gene symbols and chromosome information. 
@@ -215,7 +221,7 @@ As with any gene ID, Entrez gene IDs may not map one-to-one to the gene informat
 To resolve duplicate gene IDs one could combine all chromosome information from the multi-mapped genes, such that gene Gm1987 would be is assigned to *chr4 and chr4\_JH584294\_random*, or select one of the chromosomes to represent the gene with duplicate annotation. For simplicity we do the latter, keeping only the first occurrence of each gene ID. 
 -->
 与任何基因ID一样，Entrez基因ID可能不能一对一地匹配感兴趣的基因信息。在处理之前，检查重复的基因ID和弄清楚重复的来源非常重要。我们的基因注释中包含28个匹配到不同染色体的基因（比如基因Gm1987关联于染色体*chr4*和*chr4\_JH584294\_random*，小RNA Mir5098关联于*chr2*，*chr5*，*chr8*，*chr11*和*chr17*）。
-为了处理重复的基因ID，我们可以合并来自多重匹配基因的所有染色体信息，比如将基因Gm1987分配到*chr4 and chr4\_JH584294\_random*，或选取其中一条染色体来代表具有重读注释的基因。为了简单起见，我们选择后者，保留每个基因ID第一次出现的信息。
+为了处理重复的基因ID，我们可以合并来自多重匹配基因的所有染色体信息，比如将基因Gm1987分配到*chr4 and chr4\_JH584294\_random*，或选取其中一条染色体来代表具有重复注释的基因。为了简单起见，我们选择后者，保留每个基因ID第一次出现的信息。
 
 ```{r removedups}
 genes <- genes[!duplicated(genes$ENTREZID),]
@@ -246,13 +252,13 @@ In our analyses, CPM and log-CPM transformations are used regularly although the
 尽管CPM和log-CPM转换并不像RPKM和FPKM那样考虑到基因长度区别的影响，但在我们的分析中经常会用到它们。虽然也可以使用RPKM和FPKM，但CPM和log-CPM只使用计数矩阵即可计算，且已足以满足我们所感兴趣的比较的需要。假设不同条件之间剪接异构体（isoform）的使用没有差别，差异表达分析研究同一基因在不同条件下的表达差异，而不是比较多个基因之间的表达或测定绝对表达量。换而言之，基因长度在我们感兴趣的比较中始终不变，且任何观测到的差异是来自于条件的变化而不是基因长度的变化。
 
 <!--
-Here raw counts are converted to CPM and log-CPM values using the `cpm` function in **edgeR**, where the log-transformation uses a prior count of 2 to avoid taking the log of zero and reduce variability of low count genes. RPKM values are just as easily calculated as CPM values using the `rpkm` function in **edgeR** if gene lengths are available. 
+Here raw counts are converted to CPM and log-CPM values using the `cpm` function in **edgeR**, where log-transformations use a prior count of 0.25 to avoid taking the log of zero.  RPKM values are just as easily calculated as CPM values using the `rpkm` function in **edgeR** if gene lengths are available. 
 -->
-在此处，使用**edgeR**中的`cpm`函数将原始计数转换为CPM和log-CPM值。其中，在进行对数转换前会给所有基因的计数加上2，以避免对零取对数，且可减小低表达基因之间的差异。 如果可以提供基因长度信息，可以使用**edgeR**中的`rpkm`函数计算RPKM值，就像计算CPM值那样简单。
+在此处，使用**edgeR**中的`cpm`函数将原始计数转换为CPM和log-CPM值。其中，在进行对数转换前会给所有基因的计数加上2，以避免对零取对数，且可减小低表达基因之间的差异。如果可以提供基因长度信息，可以使用**edgeR**中的`rpkm`函数计算RPKM值，就像计算CPM值那样简单。
 
 ```{r cpm}
 cpm <- cpm(x)
-lcpm <- cpm(x, log=TRUE, prior.count=2)
+lcpm <- cpm(x, log=TRUE)
 ```
 
 ## 删除低表达基因
@@ -303,7 +309,7 @@ for (i in 2:nsamples){
  lines(den$x, den$y, col=col[i], lwd=2)
 }
 legend("topright", samplenames, text.col=col, bty="n")
-lcpm <- cpm(x, log=TRUE, prior.count=2)
+lcpm <- cpm(x, log=TRUE)
 plot(density(lcpm[,1]), col=col[1], lwd=2, ylim=c(0,0.21), las=2, 
      main="", xlab="")
 title(main="B. Filtered data", xlab="Log-cpm")
@@ -355,12 +361,12 @@ The figure below shows the expression distribution of samples for unnormalised a
 
 ```{r plotmodifieddata, fig.height=4, fig.width=8, fig.cap="样例数据：log-CPM值的箱线图展示了未经归一化的数据（A）及归一化后的数据（B）中每个样本的表达分布。数据集经过调整，样本1和2中的表达计数分别被缩放到其原始值的5%和500%。"}
 par(mfrow=c(1,2))
-lcpm <- cpm(x2, log=TRUE, prior.count=2)
+lcpm <- cpm(x2, log=TRUE)
 boxplot(lcpm, las=2, col=col, main="")
 title(main="A. Example: Unnormalised data",ylab="Log-cpm")
 x2 <- calcNormFactors(x2)  
 x2$samples$norm.factors
-lcpm <- cpm(x2, log=TRUE, prior.count=2)
+lcpm <- cpm(x2, log=TRUE)
 boxplot(lcpm, las=2, col=col, main="")
 title(main="B. Example: Normalised data",ylab="Log-cpm")
 ```
@@ -397,7 +403,7 @@ Dimensions 3 and 4 are examined using the colour grouping defined by sequencing 
 维度3和4使用以测序泳道（批次）定义的色彩组合进行检查。
 
 ```{r MDS1, fig.height=4, fig.width=8, fig.cap="log-CPM值在维度1和2的MDS图，以样品分组上色并标记（A）和维度3和4的MDS图，以测序道上色并标记（B）。图中的距离对应于最主要的倍数变化（fold change），默认情况下也就是前500个在每对样品之间差异最大的基因的平均（均方根）log2倍数变化。"}
-lcpm <- cpm(x, log=TRUE, prior.count=2)
+lcpm <- cpm(x, log=TRUE)
 par(mfrow=c(1,2))
 col.group <- group
 levels(col.group) <-  brewer.pal(nlevels(col.group), "Set1")
@@ -597,7 +603,7 @@ glMDPlot(tfit, coef=1, status=dt, main=colnames(tfit)[1],
 
 [交互式MD图链接](glimma-plots/MD-Plot.html)
 
-![使用**Glimma**生成的均值-差异图。左侧面板显示了总结性数据（log-FC与log-CPM值的关系），其中选中的基因在每个样本中的数值显示于右侧面板。下方为结果的表格，其搜索框使用户得以使用可行的注释信息查找某个特定基因，如基因符号*Clu*。](glMDplot.png)
+![使用**Glimma**生成的均值-差异图。左侧面板显示了总结性数据（log-FC与log-CPM值的关系），其中选中的基因在每个样本中的数值显示于右侧面板。下方为结果的表格，其搜索框使用户得以使用可行的注释信息查找某个特定基因，如基因符号*Clu*。](glMDPlot.png)
 
 <!--
 The mean-difference plot generated by the command above is available online (see  [http://bioinf.wehi.edu.au/folders/limmaWorkflow/glimma-plots/MD-Plot.html](http://bioinf.wehi.edu.au/folders/limmaWorkflow/glimma-plots/MD-Plot.html)). 
