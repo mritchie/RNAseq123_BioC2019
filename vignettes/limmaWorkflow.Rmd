@@ -1,9 +1,36 @@
 ---
 title: "RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR"
-author: Charity W. Law$^{1,2}$, Monther Alhamdoosh$^{3}$, Shian Su$^{1}$, Xueyi Dong$^{1}$, Luyi Tian$^{1,2}$, Gordon K. Smyth$^{1,4}$, and Matthew E. Ritchie$^{1,2,4}$
+author:
+  name: Charity Law
+- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
+    Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The
+    University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
+  name: Monther Alhamdoosh
+- affiliation: CSL Limited, Bio21 Institute, 30 Flemington Road, Parkville, Victoria
+    3010, Australia
+  name: Shian Su
+- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
+    Parkville, VIC 3052, Melbourne, Australia
+  name: Xueyi Dong
+- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
+    Parkville, VIC 3052, Melbourne, Australia
+  name: Luyi Tian
+- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
+    Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The
+    University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
+  name: Gordon K. Smyth
+- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
+    Parkville, VIC 3052, Melbourne, Australia; School of Mathematics and Statistics,
+    The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
+  name: Matthew E. Ritchie
+- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
+    Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The
+    University of Melbourne, Parkville, VIC 3010, Melbourne, Australia; School of
+    Mathematics and Statistics, The University of Melbourne, Parkville, VIC 3010,
+    Melbourne, Australia
 date: "17 December 2018"
 vignette: >
-  %\VignetteIndexEntry{RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR (English version)}
+  %\VignetteIndexEntry{RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR (Chinese version)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: workflow.bib
@@ -12,10 +39,7 @@ output:
     fig_caption: true
 ---
 
-\footnotetext[1]{The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia}
-\footnotetext[2]{Department of Medical Biology, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia}
-\footnotetext[3]{CSL Limited, Bio21 Institute, 30 Flemington Road, Parkville, Victoria 3010, Australia}
-\footnotetext[4]{School of Mathematics and Statistics, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia}
+![](stickers.png){width=400px}
 
 # Abstract
 
@@ -28,7 +52,7 @@ The complete analysis offered by these three packages highlights the ease with w
 
 RNA-sequencing (RNA-seq) has become the primary technology used for gene expression profiling, with the genome-wide detection of differentially expressed genes between two or more conditions of interest one of the most commonly asked questions by researchers. The **edgeR** [@Robinson:Bioinformatics:2010] and **limma** packages [@Ritchie:NAR:2015] available from the Bioconductor project [@Huber:NatureMethods:2015] offer a well-developed suite of statistical methods for dealing with this question for RNA-seq data.
 
-In this article, we describe an **edgeR** - **limma** workflow for analysing RNA-seq data that takes gene-level counts as its input, and moves through pre-processing and exploratory data analysis before obtaining lists of differentially expressed (DE) genes and gene signatures. This analysis is enhanced through the use of interactive graphics from the **Glimma** package [@Su:Bioinformatics:2017], that allows for a more detailed exploration of the data at both the sample and gene-level than is possible using static **R** plots.
+In this article, we describe an **edgeR** - **limma** workflow for analysing RNA-seq data that takes gene-level counts as its input, and moves through pre-processing and exploratory data analysis before obtaining lists of differentially expressed (DE) genes and gene signatures. This analysis is enhanced through the use of interactive graphics from the **Glimma** package [@Glimma:2016], that allows for a more detailed exploration of the data at both the sample and gene-level than is possible using static **R** plots.
 
 The experiment analysed in this workflow is from Sheridan *et al.* (2015) [@Sheridan:BMCCancer:2015] and consists of three cell populations (basal, luminal progenitor (LP) and mature luminal (ML)) sorted from the mammary glands of female virgin mice, each profiled in triplicate. RNA samples were sequenced across three batches on an Illumina HiSeq 2000 to obtain 100 base-pair single-end reads. 
 The analysis outlined in this article assumes that reads obtained from an RNA-seq experiment have been aligned to an appropriate reference genome and summarised into counts associated with gene-specific regions. In this instance, reads were aligned to the mouse reference genome (mm10) using the **R** based pipeline available in the **Rsubread** package (specifically the `align` function [@Liao:NAR:2013] followed by `featureCounts` [@Liao:Bioinformatics:2014] for gene-level summarisation based on the in-built *mm10* RefSeq-based annotation).  
@@ -38,8 +62,6 @@ Count data for these samples can be downloaded from the Gene Expression Omnibus 
 # Set-up
 
 ```{r setup, message=FALSE, echo = FALSE}
-library(BiocStyle)
-library(knitr)
 options(digits=3)
 options(width=90)
 ```

@@ -26,6 +26,8 @@ output:
     fig_caption: true
 ---
 
+![](stickers.png){width=400px}
+
 # 摘要
 
 简单且高效地分析RNA测序数据的能力正是Bioconductor的核心优势。
