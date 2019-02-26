@@ -30,7 +30,7 @@ author:
     Melbourne, Australia
 date: "17 December 2018"
 vignette: >
-  %\VignetteIndexEntry{RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR (Chinese version)}
+  %\VignetteIndexEntry{RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR (English version)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: workflow.bib
