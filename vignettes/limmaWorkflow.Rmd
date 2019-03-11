@@ -1,33 +1,20 @@
 ---
 title: "RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR"
 author:
-  name: Charity Law
-- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
-    Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The
-    University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
-  name: Monther Alhamdoosh
-- affiliation: CSL Limited, Bio21 Institute, 30 Flemington Road, Parkville, Victoria
-    3010, Australia
-  name: Shian Su
-- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
-    Parkville, VIC 3052, Melbourne, Australia
-  name: Xueyi Dong
-- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
-    Parkville, VIC 3052, Melbourne, Australia
-  name: Luyi Tian
-- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
-    Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The
-    University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
-  name: Gordon K. Smyth
-- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
-    Parkville, VIC 3052, Melbourne, Australia; School of Mathematics and Statistics,
-    The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
-  name: Matthew E. Ritchie
-- affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade,
-    Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The
-    University of Melbourne, Parkville, VIC 3010, Melbourne, Australia; School of
-    Mathematics and Statistics, The University of Melbourne, Parkville, VIC 3010,
-    Melbourne, Australia
+  - name: Charity Law
+    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
+  - name: Monther Alhamdoosh
+    affiliation: CSL Limited, Bio21 Institute, 30 Flemington Road, Parkville, Victoria 3010, Australia 
+  - name: Shian Su
+    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia
+  - name: Xueyi Dong
+    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia
+  - name: Luyi Tian
+    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
+  - name: Gordon K. Smyth
+    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; School of Mathematics and Statistics, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
+  - name: Matthew E. Ritchie
+    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia; School of Mathematics and Statistics, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
 date: "17 December 2018"
 vignette: >
   %\VignetteIndexEntry{RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR (English version)}
