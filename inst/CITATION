@@ -6,5 +6,6 @@ citEntry(
   volume = "5",
   pages = "1408",
   year = "2018",
+  url = "https://f1000research.com/articles/5-1408/v3",
   textVersion = "Law CW, Alhamdoosh M, Su S, Dong X, Tian L, Smyth GK, Ritchie ME. RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR [version 3; peer review: 3 approved]. F1000Research 2018, 5:1408"
 )
