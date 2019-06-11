@@ -1,6 +1,7 @@
 Package: RNAseq123
+Type: Package
 Title: RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR
-Version: 1.9.0
+Version: 0.1.0
 Date: 2019-04-25
 Authors@R: c(person(role="aut", "Charity", "Law", email = "law@wehi.edu.au"), 
                       person(role="aut", "Monther", "Alhamdoosh", email = "monther.alhamdoosh@csl.com.au"),
@@ -14,9 +15,9 @@ Depends: R (>= 3.3.0), Glimma (>= 1.1.9), limma, edgeR, gplots, RColorBrewer, Mu
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
-VignetteBuilder: knitr
+VignetteBuilder: knitr, rmarkdown
 biocViews: Workflow, GeneExpressionWorkflow, ImmunoOncologyWorkflow 
-Suggests: knitr, rmarkdown, BiocStyle
+Suggests: knitr, rmarkdown
 NeedsCompilation: no
 Author: Charity Law, Monther Alhamdoosh, Shian Su, Xueyi Dong, Luyi Tian, Gordon Smyth and Matthew Ritchie
 Maintainer: Matthew Ritchie <mritchie@wehi.edu.au>

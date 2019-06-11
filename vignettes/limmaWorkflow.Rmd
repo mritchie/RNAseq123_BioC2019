@@ -1,41 +1,99 @@
 ---
-title: "RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR"
-author:
-  - name: Charity Law
-    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
-  - name: Monther Alhamdoosh
-    affiliation: CSL Limited, Bio21 Institute, 30 Flemington Road, Parkville, Victoria 3010, Australia 
-  - name: Shian Su
-    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia
-  - name: Xueyi Dong
-    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia
-  - name: Luyi Tian
-    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
-  - name: Gordon K. Smyth
-    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; School of Mathematics and Statistics, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
-  - name: Matthew E. Ritchie
-    affiliation: The Walter and Eliza Hall Institute of Medical Research, 1G Royal Parade, Parkville, VIC 3052, Melbourne, Australia; Department of Medical Biology, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia; School of Mathematics and Statistics, The University of Melbourne, Parkville, VIC 3010, Melbourne, Australia
-date: "17 December 2018"
+output:
+  rmarkdown::html_document:
+    highlight: pygments
+    toc: true
+    toc_depth: 3
+    fig_width: 5
+    fig_caption: true
 vignette: >
-  %\VignetteIndexEntry{RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR (English version)}
+  %\VignetteIndexEntry{RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-bibliography: workflow.bib
-output:
-  BiocStyle::html_document:
-    fig_caption: true
+bibliography: "`r system.file(package='RNAseq123', 'vignettes', 'bibliography.bib')`"
 ---
+# RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR
 
-![](stickers.png){width=400px}
+`r knitr::include_graphics(system.file(package='RNAseq123', 'vignettes', 'stickers.png'))`
 
-# Abstract
+## Instructor name and contact information
 
-The ability to easily and efficiently analyse RNA-sequencing data is a key strength of the Bioconductor project.
-Starting with counts summarised at the gene-level, a typical analysis involves pre-processing, exploratory data analysis, differential expression testing and pathway analysis with the results obtained informing future experiments and validation studies. 
-In this workflow article, we analyse RNA-sequencing data from the mouse mammary gland, demonstrating use of the popular **edgeR** package to import, organise, filter and normalise the data, followed by the **limma** package with its *voom* method, linear modelling and empirical Bayes moderation to assess differential expression and perform gene set testing. This pipeline is further enhanced by the **Glimma** package which enables interactive exploration of the results so that individual samples and genes can be examined by the user.
-The complete analysis offered by these three packages highlights the ease with which researchers can turn the raw counts from an RNA-sequencing experiment into biological insights using Bioconductor.
+* Matthew E. Ritchie (mritchie@wehi.edu.au), Epigenetics and Development Division, The Walter and Eliza Hall Institute of Medical Research, Parkville, Australia
 
-# Introduction
+## Workshop Description
+
+In this workshop, we follow the analysis pipeline described in [Law et al. (2016)](https://doi.org/10.12688/f1000research.9005.3) to analyse RNA-sequencing data from the mouse mammary gland. It begins by demonstrating use of the popular **edgeR** package to import, organise, filter and normalise the data, followed by the **limma** package with its voom method, linear modelling and empirical Bayes moderation to assess differential expression and plot the results. This pipeline is further enhanced by the **Glimma** package which enables interactive exploration of the results so that individual samples and genes can be examined by the user. The complete analysis offered by these three packages highlights the ease with which researchers can turn the raw counts from an RNA-sequencing experiment into biological insights using Bioconductor. Students will be able to follow along and questions are encouraged.
+
+### Pre-requisites
+
+* Basic knowledge of RNA-sequencing 
+* Basic knowledge of R syntax, R object classes and object manipulation
+
+### Workshop Participation
+
+Participants can watch the live demo, or may prefer to follow the demonstration by bringing their laptops along. To follow the analysis on their own laptops, participants need to install the **RNAseq123** workflow by running
+
+```{r, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("RNAseq123")
+```
+
+in R. The relevant sequencing data should also be download in advance.
+
+```{r, eval=FALSE}
+url <- "https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE63310&format=file"  
+utils::download.file(url, destfile="GSE63310_RAW.tar", mode="wb")   
+utils::untar("GSE63310_RAW.tar", exdir = ".")  
+files <- c("GSM1545535_10_6_5_11.txt", "GSM1545536_9_6_5_11.txt", "GSM1545538_purep53.txt",
+  "GSM1545539_JMS8-2.txt", "GSM1545540_JMS8-3.txt", "GSM1545541_JMS8-4.txt",
+  "GSM1545542_JMS8-5.txt", "GSM1545544_JMS9-P7c.txt", "GSM1545545_JMS9-P8c.txt")
+for(i in paste(files, ".gz", sep=""))  
+  R.utils::gunzip(i, overwrite=TRUE)  
+```  
+
+Due to time restraints, extra help regarding R package installation and coding errors will not be addressed during the workshop. 
+
+
+### _R_ / _Bioconductor_ packages used
+
+Bioconductor: limma, Glimma, edgeR, Mus.musculus  
+CRAN: RColorBrewer, gplots
+
+### Time outline
+
+| Activity                          |   Time  |
+|-----------------------------------|---------|
+| Introduction                      | 5mins   |
+| Data packaging                    | 10mins  |
+| Data pre-processing               | 15mins  |
+| Differential expression analysis  | 30mins  |
+
+## Workshop goals and objectives
+
+The key steps to RNA-seq data analysis are described in this workshop with basic statistical theory of methods used. The goal is to allow beginner-analysts of RNA-seq data to become familiar with each of the steps involved, as well as completing a standard analysis pipeline from start to finish. 
+
+### Learning goals
+
+* learn how to analyse RNA-seq data
+* identify methods for pre-processing data
+* understand linear models used in differential expression analysis
+* examine plots for data exploration and result representation
+
+### Learning objectives
+
+* read in count data and format as a DGEList-object
+* annotate Entrez gene identifiers with gene information
+* filter out lowly expressed genes
+* normalise gene expression values
+* unsupervised clustering of samples (standard and interactive plots)
+* linear modelling for comparisons of interest
+* remove heteroscedascity 
+* examine the number of differentially expressed genes
+* mean-difference plots (standard and interactive plots)
+* heatmaps
+
+## Introduction
 
 RNA-sequencing (RNA-seq) has become the primary technology used for gene expression profiling, with the genome-wide detection of differentially expressed genes between two or more conditions of interest one of the most commonly asked questions by researchers. The **edgeR** [@Robinson:Bioinformatics:2010] and **limma** packages [@Ritchie:NAR:2015] available from the Bioconductor project [@Huber:NatureMethods:2015] offer a well-developed suite of statistical methods for dealing with this question for RNA-seq data.
 
@@ -46,7 +104,7 @@ The analysis outlined in this article assumes that reads obtained from an RNA-se
 
 Count data for these samples can be downloaded from the Gene Expression Omnibus (GEO) [http://www.ncbi.nlm.nih.gov/geo/](http://www.ncbi.nlm.nih.gov/geo/) using GEO Series accession number GSE63310. Further information on experimental design and sample preparation is also available from GEO under this accession number.
 
-# Set-up
+## Set-up
 
 ```{r setup, message=FALSE, echo = FALSE}
 options(digits=3)
@@ -54,13 +112,15 @@ options(width=90)
 ```
 
 ```{r setup2, eval=TRUE, message=FALSE}
-library(limma)
-library(Glimma)
-library(edgeR)
-library(Mus.musculus)
+suppressPackageStartupMessages({
+  library(limma)
+  library(Glimma)
+  library(edgeR)
+  library(Mus.musculus)
+})
 ```
 
-# Data packaging
+## Data packaging
 
 ## Reading in count-data
 
@@ -98,7 +158,7 @@ dim(x)
 
 If the counts from all samples were stored in a single file, the data can be read into **R** and then converted into a DGEList-object using the `DGEList` function.
 
-## Organising sample information
+### Organising sample information
 
 For downstream analysis, sample-level information related to the experimental design needs to be associated with the columns of the counts matrix. This should include experimental variables, both biological and technical, that could have an effect on expression levels. Examples include cell type (basal, LP and ML in this experiment), genotype (wild-type, knock-out), phenotype (disease status, sex, age), sample treatment (drug, control) and batch information (date experiment was performed if samples were collected and analysed at distinct time points) to name just a few.
 
@@ -117,7 +177,7 @@ x$samples$lane <- lane
 x$samples
 ```
 
-## Organising gene annotations
+### Organising gene annotations
 
 A second data frame named `genes` in the DGEList-object is used to store gene-level information associated with rows of the counts matrix.
 This information can be retrieved using organism specific packages such as **Mus.musculus** [@orgMm:2016] for mouse (or **Homo.sapiens** [@orgHs:2016] for human) or the **biomaRt** package [@Durinck:Bioinf:2005; @Durinck:NatureProtocols:2009] which interfaces the Ensembl genome databases in order to perform gene annotation.
@@ -147,9 +207,9 @@ x$genes <- genes
 x
 ```
 
-# Data pre-processing
+## Data pre-processing
 
-## Transformations from the raw-scale
+### Transformations from the raw-scale
 
 For differential expression and related analyses, gene expression is rarely considered at the level of raw counts since libraries sequenced at a greater depth will result in higher counts. Rather, it is common practice to transform raw counts onto a scale that accounts for such library size differences. Popular transformations include counts per million (CPM), log2-counts per million (log-CPM), reads per kilobase of transcript per million (RPKM), and fragments per kilobase of transcript per million (FPKM).
 
@@ -175,7 +235,7 @@ summary(lcpm)
 
 Log-CPM values are also used in downstream linear modeling via **limma**'s `voom` function, although `voom` recomputes its own log-CPM values internally with a smaller prior count.
 
-## Removing genes that are lowly expressed
+### Removing genes that are lowly expressed
 
 All datasets will include a mix of genes that are expressed and those that are not expressed. Whilst it is of interest to examine genes that are expressed in one condition but not in another, some genes are unexpressed throughout all samples. In fact, 19% of genes in this dataset have zero counts across all nine samples.
 
@@ -227,7 +287,7 @@ lines(den$x, den$y, col=col[i], lwd=2)
 legend("topright", samplenames, text.col=col, bty="n")
 ```
 
-## Normalising gene expression distributions
+### Normalising gene expression distributions
 During the sample preparation or sequencing process, external factors that are not of biological interest can affect the expression of individual samples. For example, samples processed in the first batch of an experiment can have higher expression overall when compared to samples processed in a second batch. It is assumed that all samples should have a similar range and distribution of expression values. Normalisation is required to ensure that the expression distributions of each sample are similar across the entire experiment. 
 
 Any plot showing the per sample expression distributions, such as a density or boxplot, is useful in determining whether any samples are dissimilar to others. Distributions of log-CPM values are similar throughout all samples within this dataset (panel B of the figure above).   
@@ -262,7 +322,7 @@ boxplot(lcpm, las=2, col=col, main="")
 title(main="B. Example: Normalised data",ylab="Log-cpm")
 ```
 
-## Unsupervised clustering of samples
+### Unsupervised clustering of samples
 
 In our opinion, one of the most important exploratory plots to examine for gene expression analyses is the multi-dimensional scaling (MDS) plot, or similar. The plot shows similarities and dissimilarities between samples in an unsupervised manner so that one can have an idea of the extent to which differential expression can be detected before carrying out formal tests. Ideally, samples would cluster well within the primary condition of interest, and any sample straying far from its group could be identified and followed up for sources of error or extra variation. If present, technical replicates should lie very close to one another. 
 
@@ -300,9 +360,9 @@ glMDSPlot(lcpm, labels=paste(group, lane, sep="_"),
 
 [Link to Interactive MDS plot](glimma-plots/MDS-Plot.html)
 
-# Differential expression analysis
+## Differential expression analysis
 
-## Creating a design matrix and contrasts
+### Creating a design matrix and contrasts
 
 In this study, it is of interest to see which genes are expressed at different levels between the three cell populations profiled. In our analysis, linear models are fitted to the data with the assumption that the underlying data is normally distributed. To get started, a design matrix is set up with both the cell population and sequencing lane (batch) information.
 
@@ -329,7 +389,7 @@ contr.matrix
 
 A key strength of **limma**'s linear modelling approach, is the ability accommodate arbitrary experimental complexity. Simple designs, such as the one in this workflow, with cell type and batch, through to more complicated factorial designs and models with interaction terms can be handled relatively easily. Where experimental or technical effects can be modelled using a random effect, another possibility in **limma** is to estimate correlations using `duplicateCorrelation` by specifying a `block` argument for both this function and in the `lmFit` linear modelling step.
 
-## Removing heteroscedascity from count data
+### Removing heteroscedascity from count data
 
 It has been shown that for RNA-seq count data, the variance is not independent of the mean [@Law:GenomeBiol:2014] -- this is true of raw counts or when transformed to log-CPM values. Methods that model counts using a Negative Binomial distribution assume a quadratic mean-variance relationship. In **limma**, linear modelling is carried out on the log-CPM values which are assumed to be normally distributed and the mean-variance relationship is accommodated using precision weights calculated by the `voom` function.
 
@@ -355,11 +415,11 @@ plotSA(efit, main="Final model: Mean-variance trend")
 
 Note that the other data frames stored within the DGEList-object that contain gene- and sample-level information, are retained in the EList-object `v` created by `voom`. The `v$genes` data frame is equivalent to `x$genes`, `v$targets` is equivalent to `x$samples`, and the expression values stored in `v$E` is analogous to `x$counts`, albeit on a transformed scale. In addition to this, the `voom` EList-object has a matrix of precision weights `v$weights` and stores the design matrix in `v$design`.
 
-## Fitting linear models for comparisons of interest
+### Fitting linear models for comparisons of interest
 
 Linear modelling in **limma** is carried out using the `lmFit` and `contrasts.fit` functions originally written for application to microarrays. The functions can be used for both microarray and RNA-seq data and fit a separate model to the expression values for each gene. Next, empirical Bayes moderation is carried out by borrowing information across all the genes to obtain more precise estimates of gene-wise variability [@Smyth:SAGMB:2004]. The model's residual variances are plotted against average expression values in the next figure. It can be seen from this plot that the variance is no longer dependent on the mean expression level.
 
-## Examining the number of DE genes
+### Examining the number of DE genes
 
 For a quick look at differential expression levels, the number of significantly up- and down-regulated genes can be summarised in a table. Significance is defined using an adjusted *p*-value cutoff that is set at 5% by default. For the comparison between expression levels in basal and LP, 4,648 genes are found to be down-regulated in basal relative to LP and 4,863 genes are up-regulated in basal relative to LP -- a total of 9,511 DE genes. A total of 9,598 DE genes are found between basal and ML (4,927 down- and 4,671 up-regulated genes), and a total of 5,652 DE genes are found between LP and ML (3,135 down- and 2,517 up-regulated). The larger numbers of DE genes observed for comparisons involving the basal population are consistent with our observations from the MDS plots.
 
@@ -396,7 +456,7 @@ head(basal.vs.lp)
 head(basal.vs.ml)
 ```
 
-## Useful graphical representations of differential expression results
+### Useful graphical representations of differential expression results
 
 To summarise results for all genes visually, mean-difference plots, which display log-FCs from the linear model fit against the average log-CPM values can be generated using the `plotMD` function, with the differentially expressed genes highlighted. 
 
@@ -417,7 +477,8 @@ glMDPlot(tfit, coef=1, status=dt, main=colnames(tfit)[1],
 
 [Link to Interactive MD plot](glimma-plots/MD-Plot.html)
 
-![Interactive mean-difference plot generated using **Glimma**. Summary data (log-FCs versus log-CPM values) are shown in the left panel which is linked to the individual values per sample for a selected gene in the right panel. A table of results is also displayed below these figures, along with a search bar to allow users to look up a particular gene using the annotation information available, e.g. the Gene symbol identifier *Clu*.](glMDplot.png)
+<!-- `r knitr::include_graphics(system.file(package='RNAseq123', 'vignettes', 'glMDplot.png'))`
+Interactive mean-difference plot generated using **Glimma**. Summary data (log-FCs versus log-CPM values) are shown in the left panel which is linked to the individual values per sample for a selected gene in the right panel. A table of results is also displayed below these figures, along with a search bar to allow users to look up a particular gene using the annotation information available, e.g. the Gene symbol identifier *Clu*. -->
 
 The mean-difference plot generated by the command above is available online (see  [http://bioinf.wehi.edu.au/folders/limmaWorkflow/glimma-plots/MD-Plot.html](http://bioinf.wehi.edu.au/folders/limmaWorkflow/glimma-plots/MD-Plot.html)). 
 The interactivity provided by the **Glimma** package allows additional information to be presented in a single graphical window. 
@@ -439,13 +500,13 @@ heatmap.2(lcpm[i,], scale="row",
    margin=c(8,6), lhei=c(2,10), dendrogram="column")
 ```
 
-# Gene set testing with camera
+## Gene set testing with camera
 
 We finish off this analysis with some gene set testing by applying the *camera* method [@Wu:NAR:2012] to the *c2* gene signatures from Broad Institute's MSigDB c2 collection [@Subramanianetal:PNAS:2005] that have been adapted for mouse and are available as Rdata objects from [http://bioinf.wehi.edu.au/software/MSigDB/](http://bioinf.wehi.edu.au/software/MSigDB/). 
 Other useful gene sets derived from MSigDB for both human and mouse, such as the hallmark gene sets, are also available from this site. C2 gene sets have been curated from online databases, publications and domain experts, and hallmark gene sets are selected from MSigDB to have well-defined biological states or processes. 
 
 ```{r camera}
-load(system.file("extdata", "mouse_c2_v5p1.rda", package = "RNAseq123"))
+load(system.file("vignettes", "mouse_c2_v5p1.rda", package = "RNAseq123"))
 idx <- ids2indices(Mm.c2,id=rownames(v))
 cam.BasalvsLP <- camera(v,idx,design,contrast=contr.matrix[,1])
 head(cam.BasalvsLP,5)
@@ -468,7 +529,7 @@ barcodeplot(efit$t[,3], index=idx$LIM_MAMMARY_LUMINAL_MATURE_UP,
 
 Other gene set tests are available in **limma**, such as the self-contained tests by *mroast* [@Wu:Bioinf:2010]. Whilst *camera* is ideal for testing a large database of gene sets and observing which of them rank highly relative to others (as shown above), self-contained tests are better for focused testing of one or a few specifically chosen sets to see if they are DE in their own right. In other words, *camera* is more appropriate when 'fishing' for gene sets of interest, whereas *mroast* tests sets that are already of interest for significance.
 
-# Software and code used
+## Software and code used
 
 This RNA-seq workflow makes use of various packages available from version 3.8 of the Bioconductor project, running on **R** version 3.5.1. Besides the software highlighted in this article (**limma**, **Glimma** and **edgeR**) it requires a number of other packages, including **gplots** and **RColorBrewer** and the gene annotation package **Mus.musculus**. 
 This document was compiled using **knitr**. Version numbers for all packages used are shown below. The **RNAseq123** Bioconductor workflow package avaliable from [https://bioconductor.org/packages/RNAseq123](https://bioconductor.org/packages/RNAseq123) contains both an English and Chinese (Mandarin) vignette of this artical along with code to perform the complete analysis. Installation of this package manages all of the above-mentioned dependencies and is a useful resource for delivering hands-on training on RNA-seq data analysis.
@@ -477,4 +538,4 @@ This document was compiled using **knitr**. Version numbers for all packages use
 sessionInfo()
 ```
 
-# References
+## References
