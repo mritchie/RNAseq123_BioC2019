@@ -10,7 +10,7 @@ vignette: >
   %\VignetteIndexEntry{RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-bibliography: "`r system.file(package='RNAseq123', 'vignettes', 'bibliography.bib')`"
+bibliography: "`r system.file(package='RNAseq123', 'vignettes', 'workflow.bib')`"
 ---
 # RNA-seq analysis is easy as 1-2-3 with limma, Glimma and edgeR
 
