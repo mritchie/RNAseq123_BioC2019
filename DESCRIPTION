@@ -11,4 +11,5 @@ LazyData: true
 VignetteBuilder: knitr, rmarkdown
 Suggests: knitr, rmarkdown
 Author: Charity Law, Monther Alhamdoosh, Shian Su, Xueyi Dong, Luyi Tian, Gordon Smyth and Matthew Ritchie
+Maintainer: Matthew Ritchie <mritchie@wehi.edu.au>
 URL: https://f1000research.com/articles/5-1408/v3
